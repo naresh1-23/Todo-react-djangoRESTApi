@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
@@ -25,7 +24,7 @@ const NotCompletedLists = (props) => {
           <Row>
             <Col>{props.data.title}</Col>
             <Col>
-              <Link to={`view/${props.data.id}`}>
+              <Link to={`/view/${props.data.id}`}>
                 <Button style={{ width: "80px" }} variant="warning">
                   View
                 </Button>

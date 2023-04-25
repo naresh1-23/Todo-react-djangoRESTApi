@@ -23,7 +23,7 @@ const CompletedLists = (props) => {
             <Row>
               <Col>{props.data.title}</Col>
               <Col>
-                <Link to={`view/${props.data.id}`}>
+                <Link to={`/view/${props.data.id}`}>
                   <Button style={{ width: "80px" }} variant="warning">
                     View
                   </Button>
