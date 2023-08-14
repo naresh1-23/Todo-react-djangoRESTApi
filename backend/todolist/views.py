@@ -7,10 +7,18 @@ from .models import todolist
 from rest_framework.response import Response
 from .serializer import TodolistSerializer
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+
 
 @api_view(['POST'])
 def todo_lists(request):
-    data = JSONParser().parse(request)
+    data = {
+        "title": request.data.get("title"),
+        "description": request.data.get("description"),
+        "duedate": request.data.get("duedate"),
+        "completed": request.data.get("completed"),
+        "user": request.user.id,
+    }
     serialized = TodolistSerializer(data = data)
     if serialized.is_valid():
         serialized.save()
@@ -19,7 +27,7 @@ def todo_lists(request):
 
 @api_view(['GET'])
 def getlist(request):
-    lists = todolist.objects.all()
+    lists = todolist.objects.filter(user = request.user.id)
     serialized = TodolistSerializer(lists, many=True)
     return Response({
         'status':200,
@@ -29,7 +37,7 @@ def getlist(request):
 @api_view(['GET'])
 def todo_detail(request, id):
     try:
-        lists = todolist.objects.get(id=id)
+        lists = todolist.objects.filter(id=id, user =request.user.id)
     except todolist.DoesNotExist:
         return HttpResponse(status=404)
     serialized = TodolistSerializer(lists)
@@ -62,7 +70,7 @@ def todo_detail(request, id):
 @api_view(['DELETE'])
 def todo_delete(request, id):
     try:
-        lists = todolist.objects.get(id=id)
+        lists = todolist.objects.filter(id=id, user = request.user.id)
     except todolist.DoesNotExist:
         return HttpResponse(status=404)
     lists.delete()
